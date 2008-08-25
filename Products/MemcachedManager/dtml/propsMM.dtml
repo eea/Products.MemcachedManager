@@ -49,6 +49,18 @@
   <tr>
     <td align="left" valign="top">
     <div class="form-label">
+    Mirrors that need to be invalidated
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <textarea name="mirrors:lines" rows="5" cols="30"><dtml-try><dtml-in
+     mirrors>&dtml-sequence-item;
+</dtml-in><dtml-except></dtml-try></textarea>
+    </td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
     Maximum age of a cache entry (seconds).
     </div>
     </td>

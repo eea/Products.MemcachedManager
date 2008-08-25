@@ -147,6 +147,7 @@ class ObjectCacheEntries(dict):
         logger.debug('Cleaning up %r', self.h)
         cache.delete(self.d)
 
+
 class Memcached(Cache):
     # Note that objects of this class are not persistent,
     # nor do they make use of acquisition.
@@ -159,6 +160,7 @@ class Memcached(Cache):
         # to verify the correctness of the internal settings.
         self.__dict__.update(kw)
         servers = kw.get('servers', ('127.0.0.1:11211',))
+        self.mirrors = kw.get('mirrors', ())
         debug = kw.get('debug', 1)
         if self.cache is not None:
             self.cache.disconnect_all()
@@ -196,6 +198,17 @@ class Memcached(Cache):
         oc = self.getObjectCacheEntries(ob)
         if oc is not None:
             oc.cleanup(self.cache)
+            # Also clear mirror servers if available
+            if getattr(self, 'mirrors', ()):
+                self._invalidate_mirrors(ob)
+
+    def _invalidate_mirrors(self, ob):
+        oc = self.getObjectCacheEntries(ob)
+        if oc is not None:
+            for mirror in getattr(self, 'mirrors', ()):
+                cache = Client((mirror,), debug=False)
+                oc.cleanup(cache)
+                cache.disconnect_all()
 
     def safeGetModTime(self, ob, mtime_func):
         """Because Cache.ZCacheable_getModTime can return setget attribute
@@ -301,6 +314,7 @@ class MemcachedManager(CacheManager, SimpleItem):
         self._settings = {
             'request_vars': ('AUTHENTICATED_USER',),
             'servers': ('127.0.0.1:11211',),
+            'mirrors': (),
             'max_age': 3600,
             'debug': 0,
             }
@@ -339,10 +353,12 @@ class MemcachedManager(CacheManager, SimpleItem):
         request_vars = list(settings['request_vars'])
         request_vars.sort()
         servers = filter(None, list(settings['servers']))
+        mirrors = filter(None, list(settings.get('mirrors',[])))
         debug = int(settings.get('debug', 0))
         self._settings = {
             'request_vars': tuple(request_vars),
             'servers': tuple(servers),
+            'mirrors': tuple(mirrors),
             'max_age': int(settings['max_age']),
             'debug': debug,
             }

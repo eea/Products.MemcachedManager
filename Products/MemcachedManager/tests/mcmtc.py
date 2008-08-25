@@ -38,6 +38,7 @@ class MemcachedManagerTestCase(ZopeTestCase.ZopeTestCase):
     def beforeTearDown(self):
         self.dummySleep()
         self._cache.cleanup()
+        memcache.DATA = {}
         self.dummySleep()
 
     def dummySleep(self, duration=0.5):

@@ -64,6 +64,9 @@ __license__   = "Python"
 
 invalid_key_pattern = re.compile(r"""[^A-Za-z0-9,./;'\\\[\]\-=`<>?:"{}|_+~!@#$%^&*()]""")
 
+DATA = {} # Keyed on server list
+EXPIRATION = {} # Keyed on server list
+
 class _Error(Exception):
     pass
 
@@ -92,11 +95,14 @@ class Client(object):
         @param debug: whether to display error messages when a server can't be
         contacted.
         """
+        servers = tuple(servers)
         self.set_servers(servers)
         self.debug = debug
         self.stats = {}
-        self._data = {}
-        self._expiration = {}
+        self._data = DATA.get(servers, {})
+        DATA[servers] = self._data
+        self._expiration = EXPIRATION.get(servers, {})
+        EXPIRATION[servers] = self._expiration
 
     def _validate_key(self, key):
         if not isinstance(key, str):
