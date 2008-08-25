@@ -6,6 +6,12 @@ Changelog
 
 
 
+1.0b2 - August 25, 2008
+-----------------------
+
+* Mirror invalidation support
+  [tesdal]
+
 1.0b1 - June 5, 2008
 --------------------
 
