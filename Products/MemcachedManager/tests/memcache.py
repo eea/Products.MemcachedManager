@@ -87,7 +87,9 @@ class Client(object):
            set, add, replace, get, get_multi, incr, decr, delete
     """
     dummyclient = True # Used for waiting in tests
-    def __init__(self, servers, debug=0):
+    def __init__(self, servers, debug=0, pickleProtocol=0,
+                 pickler=pickle.Pickler, unpickler=pickle.Unpickler,
+                 pload=None, pid=None):
         """
         Create a new Client object with the given list of servers.
 
@@ -103,6 +105,13 @@ class Client(object):
         DATA[servers] = self._data
         self._expiration = EXPIRATION.get(servers, {})
         EXPIRATION[servers] = self._expiration
+
+        # Allow users to modify pickling/unpickling behavior
+        self.pickleProtocol = pickleProtocol
+        self.pickler = pickler
+        self.unpickler = unpickler
+        self.persistent_load = pload
+        self.persistent_id = pid
 
     def _validate_key(self, key):
         if not isinstance(key, str):
@@ -251,7 +260,7 @@ class Client(object):
         '''
         self._validate_key(key)
         if not self.servers: return None
-        sanitycheck = pickle.dumps(val, 2)
+        sanitycheck = pickle.dumps(val, self.pickleProtocol)
         if not self._data.has_key(key):
             self._data[key] = val
             self._expiration[key] = time
@@ -269,7 +278,7 @@ class Client(object):
         '''
         self._validate_key(key)
         if not self.servers: return None
-        sanitycheck = pickle.dumps(val, 2)
+        sanitycheck = pickle.dumps(val, self.pickleProtocol)
         if self._data.has_key(key):
             self._data[key] = val
             self._expiration[key] = time
@@ -290,7 +299,7 @@ class Client(object):
         '''
         self._validate_key(key)
         if not self.servers: return None
-        sanitycheck = pickle.dumps(val, 2)
+        sanitycheck = pickle.dumps(val, self.pickleProtocol)
         self._data[key] = val
         if max_age != 0:
             max_age = time.time() + max_age

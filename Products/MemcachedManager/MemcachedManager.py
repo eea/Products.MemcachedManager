@@ -164,7 +164,7 @@ class Memcached(Cache):
         debug = kw.get('debug', 1)
         if self.cache is not None:
             self.cache.disconnect_all()
-        self.cache = Client(servers, debug=debug)
+        self.cache = Client(servers, debug=debug, pickleProtocol=-1)
         self.cache.debuglog(
             '(%s) initialized client '
             'with servers: %s' % (get_ident(), ', '.join(servers)))
