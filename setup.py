@@ -24,7 +24,7 @@ setup(name='Products.MemcachedManager',
       zip_safe=False,
       install_requires=[
           "setuptools",
-          "python-memcached",
+          "python-memcached >= 1.40",
       ],
       entry_points="""
       # -*- Entry points: -*-
