@@ -1,8 +1,12 @@
 Changelog
 =========
 
-1.0 - Unreleased
+1.1 - Unreleased
 ----------------
+
+* Get rid of the entry list. For invalidation we bump
+  a counter instead.
+  [tesdal]
 
 * Use pickle protocol 2.
   [tesdal]

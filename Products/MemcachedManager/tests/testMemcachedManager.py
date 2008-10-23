@@ -115,42 +115,13 @@ class TestMemcachedManager(mcmtc.MemcachedManagerTestCase):
         self.dummySleep(1)
         oc = cache.getObjectCacheEntries(ob)
         # The keys are index for data and oc.d for metadata
-        index = oc.aggregateIndex('', ob.REQUEST, cache.request_vars, None)
+        index = oc.aggregateIndex('', ob.REQUEST, cache.request_vars, None, '')
         # Overwrite data with metadata
         metadata = cache.cache.get(oc.d) # d is md5.hexdigest(url)
         cache.cache.set(index, metadata)
         # No result as data is invalid
         res = cache.ZCache_get(ob=ob)
         self.failUnlessEqual(res, None)
-
-    def testDataOverwroteMetadata(self):
-        # Test for hash key conflict
-        cm = self._cachemanager
-        cache = self._cache
-        ob = self._script
-        data = 'test'
-        self.dummySleep()
-        cache.ZCache_set(ob=ob, data=data)
-        self.dummySleep(1)
-        oc = cache.getObjectCacheEntries(ob)
-
-        # The keys are index for data and oc.d for metadata
-        index = oc.aggregateIndex('', ob.REQUEST, cache.request_vars, None)
-
-        # Overwrite metadata with data
-        cachedata = cache.cache.get(index)
-        cache.cache.set(oc.d, cachedata)
-
-        # Retrieval will work
-        res = cache.ZCache_get(ob=ob)
-        self.failUnlessEqual(res, data)
-
-        # Setting will re-create the meta data structure
-        cache.ZCache_set(ob=ob, data=data)
-
-        # What should happen in this case?
-        metadata = cache.cache.get(oc.d)
-        self.failUnless(metadata.has_key(index))
 
     def testCacheAcquisitionWrapper(self):
         # Test for hash key conflict

@@ -62,7 +62,7 @@ class ObjectCacheEntries(dict):
         md5obj.update('entryList')
         self.d = md5obj.hexdigest()
 
-    def aggregateIndex(self, view_name, req, req_names, local_keys):
+    def aggregateIndex(self, view_name, req, req_names, local_keys, cachecounter):
         """Returns the index to be used when looking for or inserting
         a cache entry.
         view_name is a string.
@@ -87,6 +87,7 @@ class ObjectCacheEntries(dict):
         for key, val in chain(req_index, local_index):
             md5obj.update(key)
             md5obj.update(val)
+        md5obj.update(cachecounter) # Updated on invalidation
 
         return md5obj.hexdigest()
 
@@ -115,42 +116,16 @@ class ObjectCacheEntries(dict):
 
         return data[0]
 
-    def loadEntryList(self, cache):
-        entry = cache.get(self.d)
-        if entry is not None:
-            if not isinstance(entry, dict):
-                logger.error('loadEntryList key %s got %s, '
-                             'expected metadata dict', 
-                             self.h, repr(entry))
-            else:
-                self.update(entry)
-
     def setEntry(self, lastmod, cache, index, data, max_age=0):
         logger.debug('Storing %r under %r', index, self.h)
         cache.set(index, (data, lastmod), max_age)
-        # Only one thread should be using this object so we don't use
-        # a lock here. The problem is actually that when we call
-        # .set() that we might be stomping over a value set by some
-        # other process for this key. The worst that can happen is a
-        # dangling key because of that, that may not cleared when
-        # cleanup() below is called.
-        self.loadEntryList(cache)
-        if not self.has_key(index):
-            self[index] = None
-            cache.set(self.d, dict(self))
-
-    def cleanup(self, cache):
-        self.loadEntryList(cache)
-        for index in self.iterkeys():
-            logger.debug('Cleaning up %s under %r', index, self.h)
-            cache.delete(index)
-        logger.debug('Cleaning up %r', self.h)
-        cache.delete(self.d)
 
 
 class Memcached(Cache):
     # Note that objects of this class are not persistent,
     # nor do they make use of acquisition.
+
+    cachecountervariable = '_memcachedcounter'
 
     def __init__(self):
         self.cache = None
@@ -195,20 +170,7 @@ class Memcached(Cache):
         """
         Invalidates the cache entries that apply to ob.
         """
-        oc = self.getObjectCacheEntries(ob)
-        if oc is not None:
-            oc.cleanup(self.cache)
-            # Also clear mirror servers if available
-            if getattr(self, 'mirrors', ()):
-                self._invalidate_mirrors(ob)
-
-    def _invalidate_mirrors(self, ob):
-        oc = self.getObjectCacheEntries(ob)
-        if oc is not None:
-            for mirror in getattr(self, 'mirrors', ()):
-                cache = Client((mirror,), debug=False)
-                oc.cleanup(cache)
-                cache.disconnect_all()
+        setattr(ob, self.cachecountervariable, getattr(ob, self.cachecountervariable, 0) + 1)
 
     def safeGetModTime(self, ob, mtime_func):
         """Because Cache.ZCacheable_getModTime can return setget attribute
@@ -253,7 +215,8 @@ class Memcached(Cache):
             return default
         lastmod = self.safeGetModTime(ob, mtime_func)
         index = oc.aggregateIndex(view_name, ob.REQUEST,
-                                  self.request_vars, keywords)
+                                  self.request_vars, keywords, 
+                                  str(getattr(ob, '_memcachedcounter', '')))
         entry = oc.getEntry(lastmod, self.cache, index)
         if entry is _marker:
             return default
@@ -267,7 +230,8 @@ class Memcached(Cache):
         lastmod = self.safeGetModTime(ob, mtime_func)
         oc = self.getObjectCacheEntries(ob)
         index = oc.aggregateIndex(view_name, ob.REQUEST,
-                                  self.request_vars, keywords)
+                                  self.request_vars, keywords,
+                                  str(getattr(ob, '_memcachedcounter', '')))
         __traceback_info__ = ('/'.join(ob.getPhysicalPath()), data)
         oc.setEntry(lastmod, self.cache, index, data, self.max_age)
 
