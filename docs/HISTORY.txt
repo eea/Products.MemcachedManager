@@ -1,8 +1,12 @@
 Changelog
 =========
 
-1.0 - Unreleased
-----------------
+1.0 - UNRELEASED
+--------------------------
+
+
+1.0rc1 - Janunary 13, 2009
+--------------------------
 
 * Get rid of the entry list. For invalidation we bump
   a counter instead.
