@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.1 - Unreleased
+1.0 - Unreleased
 ----------------
 
 * Get rid of the entry list. For invalidation we bump
@@ -11,11 +11,13 @@ Changelog
 * Use pickle protocol 2.
   [tesdal]
 
+
 1.0b2 - August 25, 2008
 -----------------------
 
 * Mirror invalidation support
   [tesdal]
+
 
 1.0b1 - June 5, 2008
 --------------------
