@@ -5,7 +5,7 @@ import memcache
 # Trick to make the local memcache become global memcache if present
 import sys
 sys.modules['memcache'] = memcache
-sys.modules['cmemcache'] = memcache
+sys.modules['pylibmc'] = memcache
 from Products.MemcachedManager.MemcachedManager import MemcachedManager
 
 class Dummy:

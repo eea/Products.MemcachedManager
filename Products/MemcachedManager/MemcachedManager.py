@@ -23,7 +23,7 @@ import logging
 import md5
 
 try:
-    import cmemcache as memcache
+    import pylibmc as memcache
 except ImportError:
     import memcache
 
@@ -45,8 +45,22 @@ invalid_key_pattern = re.compile(r"""[^A-Za-z0-9,./;'\\\[\]\-=`<>?:"{}|_+~!@#$%^
 class Client(memcache.Client):
 
     def debuglog(self, msg):
-        if self.debug:
+        if getattr(self, 'debug', False):
             logger.log(logging.DEBUG, msg)
+
+    def flush_all(self):
+        # pylibmc doesn't have flush_all yet
+        try:
+            super(Client, self).flush_all()
+        except AttributeError:
+            pass
+
+    def disconnect_all(self):
+        # pylibmc doesn't have disconnect_all yet
+        try:
+            super(Client, self).disconnect_all()
+        except AttributeError:
+            pass
 
 class ObjectCacheEntries(dict):
     """Represents the cache for one Zope object.
