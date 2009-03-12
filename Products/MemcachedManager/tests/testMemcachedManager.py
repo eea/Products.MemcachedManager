@@ -104,25 +104,6 @@ class TestMemcachedManager(mcmtc.MemcachedManagerTestCase):
         res = cache.ZCache_get(ob=ob, mtime_func=None)
         self.failIf(res, "Got %s, expected None - entry not deleted on expiry" % res)
 
-    def testMetadataOverwroteData(self):
-        # Test for hash key conflict
-        cm = self._cachemanager
-        cache = self._cache
-        ob = self._script
-        data = 'test'
-        self.dummySleep()
-        cache.ZCache_set(ob=ob, data=data)
-        self.dummySleep(1)
-        oc = cache.getObjectCacheEntries(ob)
-        # The keys are index for data and oc.d for metadata
-        index = oc.aggregateIndex('', ob.REQUEST, cache.request_vars, None, '')
-        # Overwrite data with metadata
-        metadata = cache.cache.get(oc.d) # d is md5.hexdigest(url)
-        cache.cache.set(index, metadata)
-        # No result as data is invalid
-        res = cache.ZCache_get(ob=ob)
-        self.failUnlessEqual(res, None)
-
     def testCacheAcquisitionWrapper(self):
         # Test for hash key conflict
         cm = self._cachemanager

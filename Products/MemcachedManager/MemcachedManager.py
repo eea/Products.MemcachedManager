@@ -48,19 +48,15 @@ class Client(memcache.Client):
         if getattr(self, 'debug', False):
             logger.log(logging.DEBUG, msg)
 
-    def flush_all(self):
-        # pylibmc doesn't have flush_all yet
-        try:
-            super(Client, self).flush_all()
-        except AttributeError:
-            pass
+    if memcache.__name__ == 'pylibmc':
+        def __init__(self, servers, *args, **kwds):
+            super(Client, self).__init__(servers, *args, **kwds)
+            behaviors = self.behaviors
+            behaviors['tcp_nodelay'] = 1
+            behaviors['distribution'] = 1 # consistent (same as consistent ketama)
+            behaviors['cache_lookups'] = 1 # cache dns lookup
+            #behaviors['binary_protocol'] = 1 # binary protocol is slightly faster, only works in memcached 1.3
 
-    def disconnect_all(self):
-        # pylibmc doesn't have disconnect_all yet
-        try:
-            super(Client, self).disconnect_all()
-        except AttributeError:
-            pass
 
 class ObjectCacheEntries(dict):
     """Represents the cache for one Zope object.
@@ -68,13 +64,6 @@ class ObjectCacheEntries(dict):
 
     def __init__(self, h):
         self.h = h.strip().rstrip('/')
-
-        # Use a different base key for the entry list, in case someone
-        # stores a key without 'view_name' and 'keywords' and
-        # 'req_names' so we don't clash with that key.
-        md5obj = md5.new(self.h)
-        md5obj.update('entryList')
-        self.d = md5obj.hexdigest()
 
     def aggregateIndex(self, view_name, req, req_names, local_keys, cachecounter):
         """Returns the index to be used when looking for or inserting
@@ -163,7 +152,9 @@ class Memcached(Cache):
         """
         # Use URL to avoid hash conflicts
         # and enable different keys through different URLs
-        h = ob.absolute_url()
+        h = getattr(ob, '_p_oid', None)
+        if h is None:
+            h = ob.absolute_url()
         return ObjectCacheEntries(h)
 
     def cleanup(self):
@@ -189,9 +180,6 @@ class Memcached(Cache):
     def safeGetModTime(self, ob, mtime_func):
         """Because Cache.ZCacheable_getModTime can return setget attribute
         """
-        lastmod = ob.ZCacheable_getModTime(mtime_func)
-        if lastmod is None or isinstance(lastmod, (int, float)):
-            return lastmod
         # Similar to OFS/Cache ZCacheable_getModTime but making sure
         # mtime is float or int
         mtime = 0
@@ -209,14 +197,6 @@ class Memcached(Cache):
             if not isinstance(klasstime, (int, float)):
                 klasstime = 0
             mtime = max(klasstime, mtime)
-        if ob.ZCacheable_isAMethod():
-            # This is a ZClass method.
-            instance = aq_parent(aq_inner(ob))
-            base = aq_base(instance)
-            mtime = max(getattr(base, '_p_mtime', mtime), mtime)
-            klass = getattr(base, '__class__', None)
-            if klass:
-                mtime = max(getattr(klass, '_p_mtime', mtime), mtime)
         return mtime
 
     def ZCache_get(self, ob, view_name='', keywords=None,
