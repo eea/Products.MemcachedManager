@@ -13,11 +13,11 @@ Dependencies
     IP address in the MemcachedManager settings screen.
 
 
-`cmemcache`_
+`pylibmc`_
 
-    Install this in site packages (the regular "setup.py install") to enable
-    python to talk to memcached. A note of caution: while cmemcache is faster
-    it is also less stable.
+    Install this in site packages (the regular "setup.py install" or easy_install)
+    to enable python to talk to memcached. A note of caution: while pylibmc is faster
+    it has seen less testing.
 
 or...
 
@@ -33,6 +33,6 @@ Credits
 Thanks to Mike Solomon <mas63@cornell.edu> for key validation
 
 .. _memcached: http://www.danga.com/memcached/
-.. _cmemcache: http://gijsbert.org/cmemcache/index.html
+.. _pylibmc: http://pypi.python.org/pypi/pylibmc
 .. _python-memcached: ftp://ftp.tummy.com/pub/python-memcached/
 
