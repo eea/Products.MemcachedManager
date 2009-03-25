@@ -4,6 +4,10 @@ Changelog
 1.0 - UNRELEASED
 --------------------------
 
+* Remove cmemcache support
+  Add pylibmc support
+  Optimized cache lookup code
+  [tesdal]
 
 1.0rc1 - Janunary 13, 2009
 --------------------------
