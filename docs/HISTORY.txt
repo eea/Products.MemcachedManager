@@ -4,6 +4,9 @@ Changelog
 1.0 - UNRELEASED
 --------------------------
 
+1.0rc2 - March 25, 2009
+-----------------------
+
 * Remove cmemcache support
   Add pylibmc support
   Optimized cache lookup code
