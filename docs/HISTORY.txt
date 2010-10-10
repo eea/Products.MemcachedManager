@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.1 - UNRELEASED
-----------------
+1.1b1 - 2010-10-10
+------------------
 
 * Fixed a bug with an assumption that object always has REQUEST available.
   [tesdal]
