@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.0'
+version = '1.1'
 
 setup(name='Products.MemcachedManager',
       version=version,
@@ -24,7 +24,6 @@ setup(name='Products.MemcachedManager',
       zip_safe=False,
       install_requires=[
           "setuptools",
-          "python-memcached >= 1.40",
       ],
       entry_points="""
       # -*- Entry points: -*-

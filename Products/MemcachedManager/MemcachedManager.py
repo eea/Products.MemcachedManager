@@ -30,8 +30,6 @@ except ImportError:
 from itertools import chain
 from thread import get_ident
 from Acquisition import aq_base
-from Acquisition import aq_inner
-from Acquisition import aq_parent
 from OFS.Cache import Cache, CacheManager
 from OFS.SimpleItem import SimpleItem
 from Globals import DTMLFile, InitializeClass
@@ -41,21 +39,86 @@ _marker = []  # Create a new marker object.
 logger = logging.getLogger('MemcachedManager')
 
 invalid_key_pattern = re.compile(r"""[^A-Za-z0-9,./;'\\\[\]\-=`<>?:"{}|_+~!@#$%^&*()]""")
+if memcache.__name__ != 'pylibmc':
+    class Client(memcache.Client):
 
-class Client(memcache.Client):
+        def debuglog(self, msg):
+            if getattr(self, 'debug', False):
+                logger.log(logging.DEBUG, msg)
 
-    def debuglog(self, msg):
-        if getattr(self, 'debug', False):
-            logger.log(logging.DEBUG, msg)
+else:
+    from _pylibmc import MemcachedError
+    class Client(object):
 
-    if memcache.__name__ == 'pylibmc':
-        def __init__(self, servers, *args, **kwds):
-            super(Client, self).__init__(servers, *args, **kwds)
-            behaviors = self.behaviors
-            behaviors['tcp_nodelay'] = 1
-            behaviors['distribution'] = 1 # consistent (same as consistent ketama)
-            behaviors['cache_lookups'] = 1 # cache dns lookup
-            #behaviors['binary_protocol'] = 1 # binary protocol is slightly faster, only works in memcached 1.3
+        behaviors = {
+            "tcp_nodelay": True,
+            "ketama": True,
+            "cache_lookups": True
+            }
+
+        def __init__(self, servers, debug=False, pickleProtocol=None):
+            # pickle protocol is always set to -1 in pylibmc
+            self.debug = debug
+            self._client = memcache.Client(servers, binary=True)
+            self._client.set_behaviors(self.behaviors)
+            if memcache.support_compression:
+                self.min_compress_len = 1000
+            else:
+                self.min_compress_len = 0
+
+        def debuglog(self, msg):
+            if getattr(self, 'debug', False):
+                logger.log(logging.DEBUG, msg)
+
+        def get(self, key):
+            try:
+                return self._client.get(key)
+            except MemcachedError, e:
+                self.debuglog('memcached.get failed %s' % e)
+                return None
+
+        def set(self, key, value, time=0):
+            try:
+                return self._client.set(
+                    key, value, time=time, min_compress_len=self.min_compress_len)
+            except MemcachedError, e:
+                self.debuglog('memcached.set failed %s' % e)
+                return None
+
+        def delete(self, key):
+            try:
+                return self._client.delete(key)
+            except MemcachedError, e:
+                self.debuglog('memcached.delete failed %s' % e)
+                return None
+
+        def incr(self, key):
+            try:
+                return self._client.incr(key)
+            except MemcachedError, e:
+                self.debuglog('memcached.incr failed %s' % e)
+                return None
+
+        def flush_all(self):
+            try:
+                self._client.flush_all()
+            except MemcachedError, e:
+                self.debuglog('memcached.flush_all failed %s' % e)
+                return None
+
+        def disconnect_all(self):
+            try:
+                self._client.disconnect_all()
+            except MemcachedError, e:
+                self.debuglog('memcached.disconnect_all failed %s' % e)
+                return None
+
+        def get_stats(self):
+            try:
+                return self._client.get_stats()
+            except MemcachedError, e:
+                self.debuglog('memcached.get_stats failed %s' % e)
+                return None
 
 
 class ObjectCacheEntries(dict):
@@ -208,7 +271,8 @@ class Memcached(Cache):
         if oc is None:
             return default
         lastmod = self.safeGetModTime(ob, mtime_func)
-        index = oc.aggregateIndex(view_name, ob.REQUEST,
+        index = oc.aggregateIndex(view_name,
+                                  getattr(ob,'REQUEST',None),
                                   self.request_vars, keywords, 
                                   str(getattr(ob, '_memcachedcounter', '')))
         entry = oc.getEntry(lastmod, self.cache, index)
@@ -223,7 +287,8 @@ class Memcached(Cache):
         """
         lastmod = self.safeGetModTime(ob, mtime_func)
         oc = self.getObjectCacheEntries(ob)
-        index = oc.aggregateIndex(view_name, ob.REQUEST,
+        index = oc.aggregateIndex(view_name,
+                                  getattr(ob,'REQUEST',None),
                                   self.request_vars, keywords,
                                   str(getattr(ob, '_memcachedcounter', '')))
         __traceback_info__ = ('/'.join(ob.getPhysicalPath()), data)

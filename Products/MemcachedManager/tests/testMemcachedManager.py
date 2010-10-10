@@ -19,7 +19,6 @@ class TestMemcachedManager(mcmtc.MemcachedManagerTestCase):
         self.failUnless(cache)
 
     def testCacheSetGet(self):
-        cm = self._cachemanager
         cache = self._cache
         ob = self._script
         data = 'test'
@@ -29,7 +28,6 @@ class TestMemcachedManager(mcmtc.MemcachedManagerTestCase):
         self.failUnlessEqual(cached, data)
 
     def testCacheInvalidate(self):
-        cm = self._cachemanager
         cache = self._cache
         ob = self._script
         data = 'test'
@@ -63,7 +61,6 @@ class TestMemcachedManager(mcmtc.MemcachedManagerTestCase):
         self.failIf(mirror.ZCache_get(ob=ob))
 
     def testCacheCleanup(self):
-        cm = self._cachemanager
         cache = self._cache
         ob = self._script
         data = 'test'
@@ -76,7 +73,6 @@ class TestMemcachedManager(mcmtc.MemcachedManagerTestCase):
     def testMaxAge(self):
         self.setMaxAge(1)
         self.setRefreshInterval(1)
-        cm = self._cachemanager
         cache = self._cache
         ob = self._script
         data = 'test'
@@ -89,7 +85,6 @@ class TestMemcachedManager(mcmtc.MemcachedManagerTestCase):
         self.failIf(res, "Got %s, expected None" % res)
 
     def testLastmod(self):
-        cm = self._cachemanager
         cache = self._cache
         ob = self._script
         data = 'test'
@@ -106,7 +101,6 @@ class TestMemcachedManager(mcmtc.MemcachedManagerTestCase):
 
     def testCacheAcquisitionWrapper(self):
         # Test for hash key conflict
-        cm = self._cachemanager
         cache = self._cache
         ob = self._script
         data = self.folder

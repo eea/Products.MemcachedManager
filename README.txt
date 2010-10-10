@@ -18,6 +18,9 @@ Dependencies
     Install this in site packages (the regular "setup.py install" or easy_install)
     to enable python to talk to memcached. A note of caution: while pylibmc is faster
     it has seen less testing.
+    
+    If you need pylibmc 1.1.1 for Python 2.4, you can use
+    http://dist.jarn.com/public/pylibmc-1.1.1jarn1.tar.gz
 
 or...
 

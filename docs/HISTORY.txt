@@ -1,8 +1,17 @@
 Changelog
 =========
 
-1.0 - UNRELEASED
---------------------------
+1.1 - UNRELEASED
+----------------
+
+* Fixed a bug with an assumption that object always has REQUEST available.
+  [tesdal]
+
+* Enable pylibmc compression
+  [tesdal]
+
+* Improve pylibmc support by handling MemcachedError.
+  [tesdal]
 
 1.0rc2 - March 25, 2009
 -----------------------
