@@ -30,6 +30,7 @@ except ImportError:
 from itertools import chain
 from thread import get_ident
 from Acquisition import aq_base
+from Acquisition import aq_get
 from OFS.Cache import Cache, CacheManager
 from OFS.SimpleItem import SimpleItem
 from Globals import DTMLFile, InitializeClass
@@ -272,7 +273,7 @@ class Memcached(Cache):
             return default
         lastmod = self.safeGetModTime(ob, mtime_func)
         index = oc.aggregateIndex(view_name,
-                                  getattr(ob,'REQUEST',None),
+                                  aq_get(ob,'REQUEST',None),
                                   self.request_vars, keywords, 
                                   str(getattr(ob, '_memcachedcounter', '')))
         entry = oc.getEntry(lastmod, self.cache, index)
@@ -288,7 +289,7 @@ class Memcached(Cache):
         lastmod = self.safeGetModTime(ob, mtime_func)
         oc = self.getObjectCacheEntries(ob)
         index = oc.aggregateIndex(view_name,
-                                  getattr(ob,'REQUEST',None),
+                                  aq_get(ob,'REQUEST',None),
                                   self.request_vars, keywords,
                                   str(getattr(ob, '_memcachedcounter', '')))
         __traceback_info__ = ('/'.join(ob.getPhysicalPath()), data)

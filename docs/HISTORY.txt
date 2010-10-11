@@ -4,6 +4,9 @@ Changelog
 1.1 - Unreleased
 ----------------
 
+* Use aq_get instead of getattr for getting acquired REQUEST.
+  Thanks to Vincent Fretin for pointing it out.
+  [tesdal]
 
 1.1b1 - 2010-10-10
 ------------------
