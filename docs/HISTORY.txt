@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.1 - Unreleased
-----------------
+1.1b2 - 2010-10-19
+------------------
 
 * Use aq_get instead of getattr for getting acquired REQUEST.
   Thanks to Vincent Fretin for pointing it out.
