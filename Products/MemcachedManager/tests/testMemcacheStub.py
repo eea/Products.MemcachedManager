@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Test for cmemcache module.
 Gijsbert de Haan <gijsbert.de.haan@gmail.com>
