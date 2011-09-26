@@ -54,8 +54,11 @@ else:
         behaviors = {
             "tcp_nodelay": True,
             "ketama": True,
-            "cache_lookups": True
             }
+        
+        if memcache.__version__ < '1.2.0':
+            # Recent pylibmc versions (1.2.0 and up) no longer support this option
+            behaviors['cache_lookups'] = True
 
         def __init__(self, servers, debug=False, pickleProtocol=None):
             # pickle protocol is always set to -1 in pylibmc

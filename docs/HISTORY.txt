@@ -3,7 +3,9 @@ Changelog
 1.1 - Unreleased
 ----------------
 
-
+* Support pylibmc 1.2.0 and up, by not setting the removed cache_lookup
+  behaviour.
+  [mj]
 
 1.1b2 - 2010-10-19
 ------------------
