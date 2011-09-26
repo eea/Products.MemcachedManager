@@ -20,7 +20,11 @@ $Id$
 import re
 import time
 import logging
-import md5
+
+try:
+    from hashlib import md5
+except ImportError:
+    from md5 import md5
 
 try:
     import pylibmc as memcache
@@ -33,7 +37,12 @@ from Acquisition import aq_base
 from Acquisition import aq_get
 from OFS.Cache import Cache, CacheManager
 from OFS.SimpleItem import SimpleItem
-from Globals import DTMLFile, InitializeClass
+from Globals import InitializeClass
+
+try:
+    from App.special_dtml import DTMLFile
+except ImportError:
+    from Globals import DTMLFile
 
 _marker = []  # Create a new marker object.
 
@@ -152,7 +161,7 @@ class ObjectCacheEntries(dict):
                 local_index.append((str(key), str(val)))
             local_index.sort()
         
-        md5obj = md5.new(self.h)
+        md5obj = md5(self.h)
         md5obj.update(str(view_name))
         for key, val in chain(req_index, local_index):
             md5obj.update(key)

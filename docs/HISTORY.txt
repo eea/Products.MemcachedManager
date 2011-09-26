@@ -7,6 +7,9 @@ Changelog
   behaviour.
   [mj]
 
+* Avoid deprecation warnings for DTMLFile and md5 where possible.
+  [mj]
+
 1.1b2 - 2010-10-19
 ------------------
 
