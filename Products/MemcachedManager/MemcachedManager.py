@@ -37,7 +37,10 @@ from Acquisition import aq_base
 from Acquisition import aq_get
 from OFS.Cache import Cache, CacheManager
 from OFS.SimpleItem import SimpleItem
-from Globals import InitializeClass
+try:
+    from AccessControl.class_init import InitializeClass
+except ImportError:
+    from Globals import InitializeClass
 
 try:
     from App.special_dtml import DTMLFile

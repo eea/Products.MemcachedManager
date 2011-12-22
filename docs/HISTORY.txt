@@ -10,6 +10,9 @@ Changelog
 * Avoid deprecation warnings for DTMLFile and md5 where possible.
   [mj]
 
+* Remove deprecation warning on from Globals import InitializeClass
+ [toutpt] 
+
 1.1b2 - 2010-10-19
 ------------------
 
