@@ -1,32 +1,43 @@
-from setuptools import setup, find_packages
-import os
+# -*- coding:utf-8 -*-
+from setuptools import find_packages
+from setuptools import setup
 
 version = '1.1'
+description = 'Memcached cache manager for Zope.'
+long_description = (
+    open('README.rst').read() + '\n' +
+    open('CHANGES.rst').read()
+)
+
 
 setup(name='Products.MemcachedManager',
       version=version,
-      description="Memcache cache manager for Zope",
-      long_description=open("README.txt").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.txt")).read(),
+      description=description,
+      long_description=long_description,
       classifiers=[
-        "Framework :: Zope2",
-        "License :: OSI Approved :: Zope Public License",
-        "Programming Language :: Python",
-        "Topic :: Software Development :: Libraries :: Python Modules",
-        ],
-      keywords='memcache Zope cache cachemanager',
+        'Development Status :: 4 - Beta',
+        'Environment :: Web Environment',
+        'Framework :: Zope2',
+        'Intended Audience :: Developers',
+        'Intended Audience :: System Administrators',
+        'License :: OSI Approved :: Zope Public License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+      ],
+      keywords='memcached Zope cache cachemanager',
       author='Sidnei da Silva',
       author_email='plone-developers@lists.sourceforge.net',
-      license='ZPL',
+      url='https://github.com/collective/Products.MemcachedManager',
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
       namespace_packages=['Products'],
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          "setuptools",
+          'setuptools',
       ],
       entry_points="""
       # -*- Entry points: -*-
       """,
       )
-

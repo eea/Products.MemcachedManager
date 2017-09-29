@@ -1,5 +1,6 @@
 Changelog
 =========
+
 1.1 - Unreleased
 ----------------
 
@@ -11,7 +12,8 @@ Changelog
   [mj]
 
 * Remove deprecation warning on from Globals import InitializeClass
- [toutpt] 
+  [toutpt]
+
 
 1.1b2 - 2010-10-19
 ------------------
@@ -19,6 +21,7 @@ Changelog
 * Use aq_get instead of getattr for getting acquired REQUEST.
   Thanks to Vincent Fretin for pointing it out.
   [tesdal]
+
 
 1.1b1 - 2010-10-10
 ------------------
@@ -32,6 +35,7 @@ Changelog
 * Improve pylibmc support by handling MemcachedError.
   [tesdal]
 
+
 1.0rc2 - March 25, 2009
 -----------------------
 
@@ -39,6 +43,7 @@ Changelog
   Add pylibmc support
   Optimized cache lookup code
   [tesdal]
+
 
 1.0rc1 - Janunary 13, 2009
 --------------------------
@@ -66,4 +71,3 @@ Changelog
 
 * Remove old style test setup and update it to current conventions.
   [wichert]
-
