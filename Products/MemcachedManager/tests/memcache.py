@@ -163,7 +163,7 @@ class Client(object):
             sys.stderr.write('MemCached: %s\n' % str)
 
     def _statlog(self, func):
-        if not self.stats.has_key(func):
+        if func not in self.stats:
             self.stats[func] = 1
         else:
             self.stats[func] += 1
@@ -186,7 +186,7 @@ class Client(object):
         self._validate_key(key)
         if not self.servers: return None
         self._statlog('delete')
-        if self._data.has_key(key):
+        if key in self._data:
             del self._data[key]
             del self._expiration[key]
             return 1
@@ -218,7 +218,7 @@ class Client(object):
         """
         self._validate_key(key)
         if not self.servers: return None
-        if self._data.has_key(key):
+        if key in self._data:
             try:
                 number = int(self._data[key])
                 number += delta
@@ -241,7 +241,7 @@ class Client(object):
         """
         self._validate_key(key)
         if not self.servers: return None
-        if self._data.has_key(key):
+        if key in self._data:
             try:
                 number = int(self._data[key])
                 number = max(0, number - delta)
@@ -264,7 +264,7 @@ class Client(object):
         self._validate_key(key)
         if not self.servers: return None
         sanitycheck = pickle.dumps(val, self.pickleProtocol)
-        if not self._data.has_key(key):
+        if key not in self._data:
             self._data[key] = val
             self._expiration[key] = time
             return 1
@@ -282,7 +282,7 @@ class Client(object):
         self._validate_key(key)
         if not self.servers: return None
         sanitycheck = pickle.dumps(val, self.pickleProtocol)
-        if self._data.has_key(key):
+        if key in self._data:
             self._data[key] = val
             self._expiration[key] = time
             return 1
