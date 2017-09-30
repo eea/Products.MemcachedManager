@@ -11,6 +11,8 @@ env:
 - PLONE_VERSION=5.1
 matrix:
   fast_finish: true
+before_script:
+- memcached -h
 install:
 - sed -ie "s#test-5.1#test-$PLONE_VERSION#" buildout.cfg
 - python bootstrap.py
