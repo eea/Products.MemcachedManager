@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import time
 from Testing import ZopeTestCase
 from Products.PythonScripts.PythonScript import PythonScript

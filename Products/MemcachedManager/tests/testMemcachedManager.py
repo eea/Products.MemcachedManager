@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (c) 2004 Zope Corporation and Plone Solutions
 # ZPL 2.1 license
 
