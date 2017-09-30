@@ -58,10 +58,10 @@ try:
 except ImportError:
     import pickle
 
-__author__    = "Evan Martin <martine@danga.com>"
-__version__ = "1.31"
-__copyright__ = "Copyright (C) 2003 Danga Interactive"
-__license__   = "Python"
+__author__    = 'Evan Martin <martine@danga.com>'
+__version__ = '1.31'
+__copyright__ = 'Copyright (C) 2003 Danga Interactive'
+__license__   = 'Python'
 
 invalid_key_pattern = re.compile(r"""[^A-Za-z0-9,./;'\\\[\]\-=`<>?:"{}|_+~!@#$%^&*()]""")
 
@@ -116,7 +116,7 @@ class Client(object):
 
     def _validate_key(self, key):
         if not isinstance(key, str):
-            raise TypeError("argument 1 must be string, not %s" % type(key))
+            raise TypeError('argument 1 must be string, not %s' % type(key))
         if invalid_key_pattern.search(key):
             raise ValueError, 'invalid key: "%s"' % key
 
@@ -158,7 +158,7 @@ class Client(object):
 
     def debuglog(self, str):
         if self.debug:
-            sys.stderr.write("MemCached: %s\n" % str)
+            sys.stderr.write('MemCached: %s\n' % str)
 
     def _statlog(self, func):
         if not self.stats.has_key(func):
@@ -225,7 +225,7 @@ class Client(object):
             except ValueError:
                 return None
         else:
-            raise ValueError("Could not find %s" % key)
+            raise ValueError('Could not find %s' % key)
 
     def decr(self, key, delta=1):
         """
@@ -248,7 +248,7 @@ class Client(object):
             except ValueError:
                 return None
         else:
-            raise ValueError("Could not find %s" % key)
+            raise ValueError('Could not find %s' % key)
 
     def add(self, key, val, time=0):
         '''
@@ -357,76 +357,72 @@ class Client(object):
 
 def _doctest():
     import doctest, memcache
-    servers = ["127.0.0.1:11211"]
+    servers = ['127.0.0.1:11211']
     mc = Client(servers, debug=1)
-    globs = {"mc": mc}
+    globs = {'mc': mc}
     return doctest.testmod(memcache, globs=globs)
 
-if __name__ == "__main__":
-    print "Testing docstrings..."
+if __name__ == '__main__':
+    print 'Testing docstrings...'
     _doctest()
-    print "Running tests:"
+    print 'Running tests:'
     print
     #servers = ["127.0.0.1:11211", "127.0.0.1:11212"]
-    servers = ["127.0.0.1:11211"]
+    servers = ['127.0.0.1:11211']
     mc = Client(servers, debug=1)
 
     def to_s(val):
         if not isinstance(val, types.StringTypes):
-            return "%s (%s)" % (val, type(val))
-        return "%s" % val
+            return '%s (%s)' % (val, type(val))
+        return '%s' % val
     def test_setget(key, val):
         print "Testing set/get {'%s': %s} ..." % (to_s(key), to_s(val)),
         mc.set(key, val)
         newval = mc.get(key)
         if newval == val:
-            print "OK"
+            print 'OK'
             return 1
         else:
-            print "FAIL"
+            print 'FAIL'
             return 0
 
     class FooStruct:
         def __init__(self):
-            self.bar = "baz"
+            self.bar = 'baz'
         def __str__(self):
-            return "A FooStruct"
+            return 'A FooStruct'
         def __eq__(self, other):
             if isinstance(other, FooStruct):
                 return self.bar == other.bar
             return 0
 
-    test_setget("a_string", "some random string")
-    test_setget("an_integer", 42)
-    if test_setget("long", long(1<<30)):
-        print "Testing delete ...",
-        if mc.delete("long"):
-            print "OK"
+    test_setget('a_string', 'some random string')
+    test_setget('an_integer', 42)
+    if test_setget('long', long(1<<30)):
+        print 'Testing delete ...',
+        if mc.delete('long'):
+            print 'OK'
         else:
-            print "FAIL"
-    print "Testing get_multi ...",
-    print mc.get_multi(["a_string", "an_integer"])
+            print 'FAIL'
+    print 'Testing get_multi ...',
+    print mc.get_multi(['a_string', 'an_integer'])
 
-    print "Testing get(unknown value) ...",
-    print to_s(mc.get("unknown_value"))
+    print 'Testing get(unknown value) ...',
+    print to_s(mc.get('unknown_value'))
 
     f = FooStruct()
-    test_setget("foostruct", f)
+    test_setget('foostruct', f)
 
-    print "Testing incr ...",
-    x = mc.incr("an_integer", 1)
+    print 'Testing incr ...',
+    x = mc.incr('an_integer', 1)
     if x == 43:
-        print "OK"
+        print 'OK'
     else:
-        print "FAIL"
+        print 'FAIL'
 
-    print "Testing decr ...",
-    x = mc.decr("an_integer", 1)
+    print 'Testing decr ...',
+    x = mc.decr('an_integer', 1)
     if x == 42:
-        print "OK"
+        print 'OK'
     else:
-        print "FAIL"
-
-
-
-# vim: ts=4 sw=4 et :
+        print 'FAIL'

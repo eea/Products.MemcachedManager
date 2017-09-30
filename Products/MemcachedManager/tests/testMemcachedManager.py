@@ -83,7 +83,7 @@ class TestMemcachedManager(mcmtc.MemcachedManagerTestCase):
         time.sleep(1)
         # Expired after 1 second
         res = cache.ZCache_get(ob=ob)
-        self.assertFalse(res, "Got %s, expected None" % res)
+        self.assertFalse(res, 'Got %s, expected None' % res)
 
     def testLastmod(self):
         cache = self._cache
@@ -95,10 +95,10 @@ class TestMemcachedManager(mcmtc.MemcachedManagerTestCase):
         time.sleep(1)
         # Last modified updated - should get None
         res = cache.ZCache_get(ob=ob, mtime_func=time.time)
-        self.assertFalse(res, "Got %s, expected None" % res)
+        self.assertFalse(res, 'Got %s, expected None' % res)
         # Make sure entry is deleted when expired
         res = cache.ZCache_get(ob=ob, mtime_func=None)
-        self.assertFalse(res, "Got %s, expected None - entry not deleted on expiry" % res)
+        self.assertFalse(res, 'Got %s, expected None - entry not deleted on expiry' % res)
 
     def testCacheAcquisitionWrapper(self):
         # Test for hash key conflict

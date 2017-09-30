@@ -65,8 +65,8 @@ else:
     class Client(object):
 
         behaviors = {
-            "tcp_nodelay": True,
-            "ketama": True,
+            'tcp_nodelay': True,
+            'ketama': True,
             }
 
         if memcache.__version__ < '1.2.0':

@@ -18,7 +18,7 @@ def to_s(val):
     Convert val to string.
     """
     if not isinstance(val, str):
-        return "%s (%s)" % (val, type(val))
+        return '%s (%s)' % (val, type(val))
     return val
 
 #-----------------------------------------------------------------------------------------
@@ -35,9 +35,9 @@ def test_setget(mc, key, val, checkf):
 #
 class TestCmemcache( ZopeTestCase.ZopeTestCase ):
 
-    servers = ["127.0.0.1:11211"]
-    servers_unknown = ["127.0.0.1:52345"]
-    servers_weighted = [("127.0.0.1:11211", 2)]
+    servers = ['127.0.0.1:11211']
+    servers_unknown = ['127.0.0.1:52345']
+    servers_weighted = [('127.0.0.1:11211', 2)]
 
     def _test_cmemcache(self, mcm):
         """
@@ -189,7 +189,7 @@ class TestCmemcache( ZopeTestCase.ZopeTestCase ):
             s.connect((ip, int(port)))
         except socket.error, e:
             # not running, start one
-            memcached = subprocess.Popen("memcached -m 10", shell=True)
+            memcached = subprocess.Popen('memcached -m 10', shell=True)
             print 'memcached not running, starting one (pid %d)' % (memcached.pid,)
             # give it some time to start
             import time

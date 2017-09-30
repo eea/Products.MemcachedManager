@@ -11,7 +11,7 @@ from Products.MemcachedManager.MemcachedManager import MemcachedManager
 
 class Dummy:
 
-    meta_type="foo"
+    meta_type='foo'
 
     def __init__(self, path):
         self.path = path

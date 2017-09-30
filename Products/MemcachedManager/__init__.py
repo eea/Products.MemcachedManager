@@ -4,7 +4,7 @@ $Id$
 """
 
 import logging
-logger = logging.getLogger("MemcachedManager")
+logger = logging.getLogger('MemcachedManager')
 
 def initialize(context):
     try:
@@ -21,6 +21,5 @@ def initialize(context):
         constructors = (
         MemcachedManager.manage_addMemcachedManagerForm,
         MemcachedManager.manage_addMemcachedManager),
-        icon="cache.gif"
+        icon='cache.gif'
         )
-
