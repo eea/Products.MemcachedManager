@@ -43,7 +43,7 @@ class MemcachedManagerTestCase(ZopeTestCase.ZopeTestCase):
         self.dummySleep()
 
     def dummySleep(self, duration=0.5):
-        if not hasattr(self._cache.cache, 'dummyclient'):time.sleep(duration)
+        if not hasattr(self._cache.cache, 'dummyclient'): time.sleep(duration)
 
 
     def setRequestVars(self, request_vars):

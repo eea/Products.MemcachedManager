@@ -289,7 +289,7 @@ class Memcached(Cache):
             return default
         lastmod = self.safeGetModTime(ob, mtime_func)
         index = oc.aggregateIndex(view_name,
-                                  aq_get(ob,'REQUEST',None),
+                                  aq_get(ob, 'REQUEST', None),
                                   self.request_vars, keywords,
                                   str(getattr(ob, '_memcachedcounter', '')))
         entry = oc.getEntry(lastmod, self.cache, index)
@@ -305,7 +305,7 @@ class Memcached(Cache):
         lastmod = self.safeGetModTime(ob, mtime_func)
         oc = self.getObjectCacheEntries(ob)
         index = oc.aggregateIndex(view_name,
-                                  aq_get(ob,'REQUEST',None),
+                                  aq_get(ob, 'REQUEST', None),
                                   self.request_vars, keywords,
                                   str(getattr(ob, '_memcachedcounter', '')))
         __traceback_info__ = ('/'.join(ob.getPhysicalPath()), data)
@@ -342,8 +342,8 @@ class MemcachedManager(CacheManager, SimpleItem):
         )
 
     manage_options = (
-        {'label':'Properties', 'action':'manage_main'},
-        {'label':'Statistics', 'action':'manage_stats'},
+        {'label': 'Properties', 'action': 'manage_main'},
+        {'label': 'Statistics', 'action': 'manage_stats'},
         ) + CacheManager.manage_options + SimpleItem.manage_options
 
     meta_type = 'Memcached Manager'
@@ -393,7 +393,7 @@ class MemcachedManager(CacheManager, SimpleItem):
         request_vars = list(settings['request_vars'])
         request_vars.sort()
         servers = filter(None, list(settings['servers']))
-        mirrors = filter(None, list(settings.get('mirrors',[])))
+        mirrors = filter(None, list(settings.get('mirrors', [])))
         debug = int(settings.get('debug', 0))
         self._settings = {
             'request_vars': tuple(request_vars),

@@ -117,7 +117,7 @@ class TestCmemcache( ZopeTestCase.ZopeTestCase ):
         mc.set('blo', 'bli')
         self.assertEqual(mc.get('blo'), 'bli')
         d = mc.get_multi(['blo', 'number', 'doesnotexist'])
-        self.assertEqual(d, {'blo':'bli', 'number':'6'})
+        self.assertEqual(d, {'blo': 'bli', 'number': '6'})
 
         # make sure zero delimitation characters are ignored in values.
         test_setget(mc, 'blabla', 'bli\000bli', self.assertEqual)
@@ -174,9 +174,9 @@ class TestCmemcache( ZopeTestCase.ZopeTestCase ):
 
         self._test_sgra(mc, 'blu', 'replace', 'will not be set', ok)
 
-        val = {'bla':'bli', 'blo':12}
-        repval = {'bla':'blo', 'blo':12}
-        norepval = {'blo':12}
+        val = {'bla': 'bli', 'blo': 12}
+        repval = {'bla': 'blo', 'blo': 12}
+        norepval = {'blo': 12}
         self._test_sgra(mc, val, repval, norepval, ok)
 
     def test_memcache(self):
