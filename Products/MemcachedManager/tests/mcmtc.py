@@ -9,6 +9,7 @@ sys.modules['memcache'] = memcache
 sys.modules['pylibmc'] = memcache
 from Products.MemcachedManager.MemcachedManager import MemcachedManager
 
+
 class Dummy:
 
     meta_type='foo'

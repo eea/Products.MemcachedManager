@@ -68,8 +68,10 @@ invalid_key_pattern = re.compile(r"""[^A-Za-z0-9,./;'\\\[\]\-=`<>?:"{}|_+~!@#$%^
 DATA = {} # Keyed on server list
 EXPIRATION = {} # Keyed on server list
 
+
 class _Error(Exception):
     pass
+
 
 class Client(object):
     """
@@ -88,6 +90,7 @@ class Client(object):
            set, add, replace, get, get_multi, incr, decr, delete
     """
     dummyclient = True # Used for waiting in tests
+
     def __init__(self, servers, debug=0, pickleProtocol=0,
                  pickler=pickle.Pickler, unpickler=pickle.Unpickler,
                  pload=None, pid=None):
@@ -119,7 +122,6 @@ class Client(object):
             raise TypeError('argument 1 must be string, not %s' % type(key))
         if invalid_key_pattern.search(key):
             raise ValueError, 'invalid key: "%s"' % key
-
 
     def set_servers(self, servers):
         """
@@ -375,6 +377,7 @@ if __name__ == '__main__':
         if not isinstance(val, types.StringTypes):
             return '%s (%s)' % (val, type(val))
         return '%s' % val
+
     def test_setget(key, val):
         print "Testing set/get {'%s': %s} ..." % (to_s(key), to_s(val)),
         mc.set(key, val)
@@ -389,8 +392,10 @@ if __name__ == '__main__':
     class FooStruct:
         def __init__(self):
             self.bar = 'baz'
+
         def __str__(self):
             return 'A FooStruct'
+
         def __eq__(self, other):
             if isinstance(other, FooStruct):
                 return self.bar == other.bar

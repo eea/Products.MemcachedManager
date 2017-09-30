@@ -11,6 +11,7 @@ import os, signal, socket, subprocess
 
 from Testing import ZopeTestCase
 
+
 #-----------------------------------------------------------------------------------------
 #
 def to_s(val):
@@ -21,6 +22,7 @@ def to_s(val):
         return '%s (%s)' % (val, type(val))
     return val
 
+
 #-----------------------------------------------------------------------------------------
 #
 def test_setget(mc, key, val, checkf):
@@ -30,6 +32,7 @@ def test_setget(mc, key, val, checkf):
     mc.set(key, val)
     newval = mc.get(key)
     checkf(val, newval)
+
 
 #-------------------------------------------------------------------------------
 #
@@ -222,6 +225,7 @@ class TestCmemcache( ZopeTestCase.ZopeTestCase ):
         # if we created memcached for our test, then shut it down
         if memcached:
             os.kill(memcached.pid, signal.SIGINT)
+
 
 def test_suite():
     from unittest import TestSuite, makeSuite

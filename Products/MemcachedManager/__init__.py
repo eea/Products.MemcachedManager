@@ -6,6 +6,7 @@ $Id$
 import logging
 logger = logging.getLogger('MemcachedManager')
 
+
 def initialize(context):
     try:
         import MemcachedManager

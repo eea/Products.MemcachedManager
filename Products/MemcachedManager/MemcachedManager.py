@@ -62,6 +62,7 @@ if memcache.__name__ != 'pylibmc':
 
 else:
     from _pylibmc import MemcachedError
+
     class Client(object):
 
         behaviors = {
@@ -313,6 +314,7 @@ class Memcached(Cache):
 
 caches = {}
 
+
 class MemcachedManager(CacheManager, SimpleItem):
     """Manage a cache which stores rendered data in memcached.
 
@@ -366,6 +368,7 @@ class MemcachedManager(CacheManager, SimpleItem):
         return self.id
 
     ZCacheManager_getCache__roles__ = ()
+
     def ZCacheManager_getCache(self):
         key = (get_ident(), self.__cacheid)
         try:
@@ -420,9 +423,11 @@ class MemcachedManager(CacheManager, SimpleItem):
         rval = c.getCacheReport()
         return rval
 
+
 InitializeClass(MemcachedManager)
 
 manage_addMemcachedManagerForm = DTMLFile('dtml/addMM', globals())
+
 
 def manage_addMemcachedManager(self, id, REQUEST=None):
     """Add a Memcached Manager to the folder.
