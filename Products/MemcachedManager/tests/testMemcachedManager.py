@@ -12,11 +12,11 @@ class TestMemcachedManager(mcmtc.MemcachedManagerTestCase):
 
     def testCacheManagerPresence(self):
         cm = self._cachemanager
-        self.failUnless(cm)
+        self.assertTrue(cm)
 
     def testCachePresence(self):
         cache = self._cache
-        self.failUnless(cache)
+        self.assertTrue(cache)
 
     def testCacheSetGet(self):
         cache = self._cache
@@ -25,7 +25,7 @@ class TestMemcachedManager(mcmtc.MemcachedManagerTestCase):
         cache.ZCache_set(ob=ob, data=data)
         self.dummySleep()
         cached = cache.ZCache_get(ob=ob)
-        self.failUnlessEqual(cached, data)
+        self.assertEqual(cached, data)
 
     def testCacheInvalidate(self):
         cache = self._cache
@@ -35,7 +35,7 @@ class TestMemcachedManager(mcmtc.MemcachedManagerTestCase):
         time.sleep(0.5)
         cache.ZCache_invalidate(ob=ob)
         self.dummySleep()
-        self.failIf(cache.ZCache_get(ob=ob))
+        self.assertFalse(cache.ZCache_get(ob=ob))
 
     def testCacheInvalidateMirrors(self):
         cm = self._cachemanager
@@ -57,8 +57,8 @@ class TestMemcachedManager(mcmtc.MemcachedManagerTestCase):
 
         cache.ZCache_invalidate(ob=ob)
         self.dummySleep()
-        self.failIf(cache.ZCache_get(ob=ob))
-        self.failIf(mirror.ZCache_get(ob=ob))
+        self.assertFalse(cache.ZCache_get(ob=ob))
+        self.assertFalse(mirror.ZCache_get(ob=ob))
 
     def testCacheCleanup(self):
         cache = self._cache
@@ -68,7 +68,7 @@ class TestMemcachedManager(mcmtc.MemcachedManagerTestCase):
         self.dummySleep()
         cache.cleanup()
         self.dummySleep()
-        self.failIf(cache.ZCache_get(ob=ob))
+        self.assertFalse(cache.ZCache_get(ob=ob))
 
     def testMaxAge(self):
         self.setMaxAge(1)
@@ -82,7 +82,7 @@ class TestMemcachedManager(mcmtc.MemcachedManagerTestCase):
         time.sleep(1)
         # Expired after 1 second
         res = cache.ZCache_get(ob=ob)
-        self.failIf(res, "Got %s, expected None" % res)
+        self.assertFalse(res, "Got %s, expected None" % res)
 
     def testLastmod(self):
         cache = self._cache
@@ -94,10 +94,10 @@ class TestMemcachedManager(mcmtc.MemcachedManagerTestCase):
         time.sleep(1)
         # Last modified updated - should get None
         res = cache.ZCache_get(ob=ob, mtime_func=time.time)
-        self.failIf(res, "Got %s, expected None" % res)
+        self.assertFalse(res, "Got %s, expected None" % res)
         # Make sure entry is deleted when expired
         res = cache.ZCache_get(ob=ob, mtime_func=None)
-        self.failIf(res, "Got %s, expected None - entry not deleted on expiry" % res)
+        self.assertFalse(res, "Got %s, expected None - entry not deleted on expiry" % res)
 
     def testCacheAcquisitionWrapper(self):
         # Test for hash key conflict
@@ -107,7 +107,7 @@ class TestMemcachedManager(mcmtc.MemcachedManagerTestCase):
         self.dummySleep()
         # This is supposed to thrown a TypeError
         # cache.ZCache_set(ob=ob, data=data)
-        self.failUnlessRaises(TypeError, cache.ZCache_set, ob=ob, data=data)
+        self.assertRaises(TypeError, cache.ZCache_set, ob=ob, data=data)
         self.dummySleep(1)
 
 

@@ -15,7 +15,7 @@ class TestSetup(ZopeTestCase.ZopeTestCase):
     def testAddCacheManager(self):
         factory = self.folder.manage_addProduct['MemcachedManager']
         factory.manage_addMemcachedManager(id='memcache')
-        self.failUnless('memcache' in self.folder.objectIds())
+        self.assertTrue('memcache' in self.folder.objectIds())
 
 
 def test_suite():

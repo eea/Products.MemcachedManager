@@ -45,17 +45,17 @@ class TestCmemcache( ZopeTestCase.ZopeTestCase ):
         """
         mc = mcm.StringClient(self.servers)
         mc.set('blo', 'blu', 0, 12)
-        self.failUnlessEqual(mc.get('blo'), 'blu')
-        self.failUnlessEqual(mc.getflags('blo'), ('blu', 12))
+        self.assertEqual(mc.get('blo'), 'blu')
+        self.assertEqual(mc.getflags('blo'), ('blu', 12))
 
-        self.failUnlessEqual(mc.incr('nonexistantnumber'), None)
-        self.failUnlessEqual(mc.decr('nonexistantnumber'), None)
+        self.assertEqual(mc.incr('nonexistantnumber'), None)
+        self.assertEqual(mc.decr('nonexistantnumber'), None)
 
         # try weird server formats
         # number is not a server
-        self.failUnlessRaises(TypeError, lambda: mc.set_servers([12]))
+        self.assertRaises(TypeError, lambda: mc.set_servers([12]))
         # forget port
-        self.failUnlessRaises(TypeError, lambda: mc.set_servers(['12']))
+        self.assertRaises(TypeError, lambda: mc.set_servers(['12']))
 
     def _test_memcache(self, mcm):
         """
@@ -63,27 +63,27 @@ class TestCmemcache( ZopeTestCase.ZopeTestCase ):
         """
         mc = mcm.Client(self.servers)
         mc.set('blo', 'blu')
-        self.failUnlessEqual(mc.get('blo'), 'blu')
-        self.failUnlessRaises(ValueError, lambda: mc.decr('nonexistantnumber'))
-        self.failUnlessRaises(ValueError, lambda: mc.incr('nonexistantnumber'))
+        self.assertEqual(mc.get('blo'), 'blu')
+        self.assertRaises(ValueError, lambda: mc.decr('nonexistantnumber'))
+        self.assertRaises(ValueError, lambda: mc.incr('nonexistantnumber'))
 
     def _test_sgra(self, mc, val, repval, norepval, ok):
         """
         Test set, get, replace, add api.
         """
-        self.failUnlessEqual(mc.set('blo', val), ok)
-        self.failUnlessEqual(mc.get('blo'), val)
+        self.assertEqual(mc.set('blo', val), ok)
+        self.assertEqual(mc.get('blo'), val)
         mc.replace('blo', repval)
-        self.failUnlessEqual(mc.get('blo'), repval)
+        self.assertEqual(mc.get('blo'), repval)
         mc.add('blo', norepval)
-        self.failUnlessEqual(mc.get('blo'), repval)
+        self.assertEqual(mc.get('blo'), repval)
 
         mc.delete('blo')
-        self.failUnlessEqual(mc.get('blo'), None)
+        self.assertEqual(mc.get('blo'), None)
         mc.replace('blo', norepval)
-        self.failUnlessEqual(mc.get('blo'), None)
+        self.assertEqual(mc.get('blo'), None)
         mc.add('blo', repval)
-        self.failUnlessEqual(mc.get('blo'), repval)
+        self.assertEqual(mc.get('blo'), repval)
 
     def _test_base(self, mcm, mc, ok):
         """
@@ -104,31 +104,31 @@ class TestCmemcache( ZopeTestCase.ZopeTestCase ):
         self._test_sgra(mc, 'blu', 'replace', 'will not be set', ok)
 
         mc.delete('blo')
-        self.failUnlessEqual(mc.get('blo'), None)
+        self.assertEqual(mc.get('blo'), None)
 
         mc.set('number', '5')
-        self.failUnlessEqual(mc.get('number'), '5')
-        self.failUnlessEqual(mc.incr('number', 3), 8)
-        self.failUnlessEqual(mc.decr('number', 2), 6)
-        self.failUnlessEqual(mc.get('number'), '6')
-        self.failUnlessEqual(mc.incr('number'), 7)
-        self.failUnlessEqual(mc.decr('number'), 6)
+        self.assertEqual(mc.get('number'), '5')
+        self.assertEqual(mc.incr('number', 3), 8)
+        self.assertEqual(mc.decr('number', 2), 6)
+        self.assertEqual(mc.get('number'), '6')
+        self.assertEqual(mc.incr('number'), 7)
+        self.assertEqual(mc.decr('number'), 6)
 
         mc.set('blo', 'bli')
-        self.failUnlessEqual(mc.get('blo'), 'bli')
+        self.assertEqual(mc.get('blo'), 'bli')
         d = mc.get_multi(['blo', 'number', 'doesnotexist'])
-        self.failUnlessEqual(d, {'blo':'bli', 'number':'6'})
+        self.assertEqual(d, {'blo':'bli', 'number':'6'})
 
         # make sure zero delimitation characters are ignored in values.
-        test_setget(mc, 'blabla', 'bli\000bli', self.failUnlessEqual)
+        test_setget(mc, 'blabla', 'bli\000bli', self.assertEqual)
 
         # get stats
         stats = mc.get_stats()
-        self.failUnlessEqual(len(stats), 1)
-        self.assert_(self.servers[0] in stats[0][0])
-        self.assert_('total_items' in stats[0][1])
-        self.assert_('bytes_read' in stats[0][1])
-        self.assert_('bytes_written' in stats[0][1])
+        self.assertEqual(len(stats), 1)
+        self.assertTrue(self.servers[0] in stats[0][0])
+        self.assertTrue('total_items' in stats[0][1])
+        self.assertTrue('bytes_read' in stats[0][1])
+        self.assertTrue('bytes_written' in stats[0][1])
 
         # set_servers to none
         mc.set_servers([])
@@ -138,24 +138,24 @@ class TestCmemcache( ZopeTestCase.ZopeTestCase ):
         except ZeroDivisionError:
             pass
         else:
-            self.failUnlessEqual(mc.get('bli'), None)
+            self.assertEqual(mc.get('bli'), None)
 
         # set unknown server
         # mc.set_servers(self.servers_unknown)
-        # test_setget(mc, 'bla', 'bli', self.failIfEqual)
+        # test_setget(mc, 'bla', 'bli', self.assertFalseEqual)
 
         # set servers with weight syntax
         mc.set_servers(self.servers_weighted)
-        test_setget(mc, 'bla', 'bli', self.failUnlessEqual)
-        test_setget(mc, 'blo', 'blu', self.failUnlessEqual)
+        test_setget(mc, 'bla', 'bli', self.assertEqual)
+        test_setget(mc, 'blo', 'blu', self.assertEqual)
 
         # set servers again
         mc.set_servers(self.servers)
-        test_setget(mc, 'bla', 'bli', self.failUnlessEqual)
-        test_setget(mc, 'blo', 'blu', self.failUnlessEqual)
+        test_setget(mc, 'bla', 'bli', self.assertEqual)
+        test_setget(mc, 'blo', 'blu', self.assertEqual)
 
         # test unicode
-        test_setget(mc, 'blo', '© 2006', self.failUnlessEqual)
+        test_setget(mc, 'blo', '© 2006', self.assertEqual)
 
         # flush_all
         # fixme: how to test this?
