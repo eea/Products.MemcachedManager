@@ -30,7 +30,7 @@ def test_setget(mc, key, val, checkf):
     mc.set(key, val)
     newval = mc.get(key)
     checkf(val, newval)
-    
+
 #-------------------------------------------------------------------------------
 #
 class TestCmemcache( ZopeTestCase.ZopeTestCase ):
@@ -56,7 +56,7 @@ class TestCmemcache( ZopeTestCase.ZopeTestCase ):
         self.failUnlessRaises(TypeError, lambda: mc.set_servers([12]))
         # forget port
         self.failUnlessRaises(TypeError, lambda: mc.set_servers(['12']))
-        
+
     def _test_memcache(self, mcm):
         """
         Test memcache specifics.
@@ -66,7 +66,7 @@ class TestCmemcache( ZopeTestCase.ZopeTestCase ):
         self.failUnlessEqual(mc.get('blo'), 'blu')
         self.failUnlessRaises(ValueError, lambda: mc.decr('nonexistantnumber'))
         self.failUnlessRaises(ValueError, lambda: mc.incr('nonexistantnumber'))
-        
+
     def _test_sgra(self, mc, val, repval, norepval, ok):
         """
         Test set, get, replace, add api.
@@ -105,7 +105,7 @@ class TestCmemcache( ZopeTestCase.ZopeTestCase ):
 
         mc.delete('blo')
         self.failUnlessEqual(mc.get('blo'), None)
-        
+
         mc.set('number', '5')
         self.failUnlessEqual(mc.get('number'), '5')
         self.failUnlessEqual(mc.incr('number', 3), 8)
@@ -129,7 +129,7 @@ class TestCmemcache( ZopeTestCase.ZopeTestCase ):
         self.assert_('total_items' in stats[0][1])
         self.assert_('bytes_read' in stats[0][1])
         self.assert_('bytes_written' in stats[0][1])
-        
+
         # set_servers to none
         mc.set_servers([])
         try:
@@ -205,7 +205,7 @@ class TestCmemcache( ZopeTestCase.ZopeTestCase ):
             self._test_memcache(memcache)
             self._test_base(memcache, memcache.Client(self.servers), ok=1)
             self._test_client(memcache, ok=1)
-        
+
         # test extension
         try:
             from cmemcache import StringClient # Only in cmemcache

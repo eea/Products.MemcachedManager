@@ -67,7 +67,7 @@ else:
             "tcp_nodelay": True,
             "ketama": True,
             }
-        
+
         if memcache.__version__ < '1.2.0':
             # Recent pylibmc versions (1.2.0 and up) no longer support this option
             behaviors['cache_lookups'] = True
@@ -163,7 +163,7 @@ class ObjectCacheEntries(dict):
             for key, val in local_keys.items():
                 local_index.append((str(key), str(val)))
             local_index.sort()
-        
+
         md5obj = md5(self.h)
         md5obj.update(str(view_name))
         for key, val in chain(req_index, local_index):
@@ -181,13 +181,13 @@ class ObjectCacheEntries(dict):
 
         if not isinstance(data, tuple):
             logger.error('getEntry key %r under %r got %s, '
-                         'expected metadata tuple', 
+                         'expected metadata tuple',
                          index, self.h, repr(data))
             return _marker
 
         if not len(data) == 2:
             logger.error('getEntry key %r under %r got %s, '
-                         'expected metadata tuple of len() == 2', 
+                         'expected metadata tuple of len() == 2',
                          index, self.h, repr(data))
             return _marker
 
@@ -289,7 +289,7 @@ class Memcached(Cache):
         lastmod = self.safeGetModTime(ob, mtime_func)
         index = oc.aggregateIndex(view_name,
                                   aq_get(ob,'REQUEST',None),
-                                  self.request_vars, keywords, 
+                                  self.request_vars, keywords,
                                   str(getattr(ob, '_memcachedcounter', '')))
         entry = oc.getEntry(lastmod, self.cache, index)
         if entry is _marker:

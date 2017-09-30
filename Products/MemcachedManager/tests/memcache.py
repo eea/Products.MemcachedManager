@@ -26,7 +26,7 @@ This should give you a feel for how this module operates::
 
     mc.set("another_key", 3)
     mc.delete("another_key")
-    
+
     mc.set("key", "1")   # note that the key used for incr/decr must be a string.
     mc.incr("key")
     mc.decr("key")
@@ -73,7 +73,7 @@ class _Error(Exception):
 class Client(object):
     """
     Object representing a pool of memcache servers.
-    
+
     See L{memcache} for an overview.
 
     The key has to be a string
@@ -133,7 +133,7 @@ class Client(object):
         self.servers = servers
 
     def get_stats(self):
-        '''Get statistics from each of the servers.  
+        '''Get statistics from each of the servers.
 
         @return: A list of tuples ( server_identifier, stats_dictionary ).
             The dictionary contains a number of name/value pairs specifying
@@ -173,10 +173,10 @@ class Client(object):
 
     def disconnect_all(self):
         pass
-    
+
     def delete(self, key, time=0):
         '''Deletes a key from the memcache.
-        
+
         @return: Nonzero on success.
         @rtype: int
         '''
@@ -252,7 +252,7 @@ class Client(object):
     def add(self, key, val, time=0):
         '''
         Add new key with value.
-        
+
         Like L{set}, but only stores in memcache if the key doesn't already exist.
 
         @return: Nonzero on success.
@@ -269,8 +269,8 @@ class Client(object):
 
     def replace(self, key, val, time=0):
         '''Replace existing key with value.
-        
-        Like L{set}, but only stores in memcache if the key already exists.  
+
+        Like L{set}, but only stores in memcache if the key already exists.
         The opposite of L{add}.
 
         @return: Nonzero on success.
@@ -308,7 +308,7 @@ class Client(object):
 
     def get(self, key):
         '''Retrieves a key from the memcache.
-        
+
         @return: The value or None.
         '''
         self._validate_key(key)
@@ -326,7 +326,7 @@ class Client(object):
     def get_multi(self, keys):
         '''
         Retrieves multiple keys from the memcache doing just one query.
-        
+
         >>> success = mc.set("foo", "bar")
         >>> success = mc.set("baz", 42)
         >>> mc.get_multi(["foo", "baz", "foobar"]) == {"foo": "bar", "baz": 42}
@@ -394,7 +394,7 @@ if __name__ == "__main__":
             if isinstance(other, FooStruct):
                 return self.bar == other.bar
             return 0
-        
+
     test_setget("a_string", "some random string")
     test_setget("an_integer", 42)
     if test_setget("long", long(1<<30)):
