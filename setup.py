@@ -37,6 +37,10 @@ setup(name='Products.MemcachedManager',
       install_requires=[
           'setuptools',
       ],
+      extras_require={
+          'pylibmc': 'pylibmc',
+          'python-memcached': 'python-memcached',
+      },
       entry_points="""
       # -*- Entry points: -*-
       """,
