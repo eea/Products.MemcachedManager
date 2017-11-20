@@ -179,13 +179,13 @@ class ObjectCacheEntries(dict):
             return _marker
 
         if not isinstance(data, tuple):
-            logger.error('getEntry key %r under %r got %s, '
+            logger.warn('getEntry key %r under %r got %s, '
                          'expected metadata tuple',
                          index, self.h, repr(data))
             return _marker
 
         if not len(data) == 2:
-            logger.error('getEntry key %r under %r got %s, '
+            logger.warn('getEntry key %r under %r got %s, '
                          'expected metadata tuple of len() == 2',
                          index, self.h, repr(data))
             return _marker
